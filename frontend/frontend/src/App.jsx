@@ -1,22 +1,48 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { useState } from "react";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import Login from "./auth/Login";
+import Signup from "./auth/Signup";
+import { AuthProvider } from "./auth/AuthProvider";
+import PrivateRoute from "./auth/PrivateRoute";
 
+function AppContent() {
+  const location = useLocation();
+  const hideLayout = ["/login", "/signup"].includes(location.pathname);
 
-function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <>
+      {!hideLayout && <Navbar />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
       </Routes>
-      <Footer />
-    </BrowserRouter>
+
+      {!hideLayout && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
