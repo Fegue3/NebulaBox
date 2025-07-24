@@ -155,7 +155,7 @@
   position: absolute;
   top: 2.6rem;
   right: 0;
-  background-color: #1e293b;
+  background-color: rgba(15, 23, 42, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.5rem;
   padding: 0.5rem 0;
