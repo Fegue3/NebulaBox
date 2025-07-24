@@ -8,10 +8,11 @@ import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import { AuthProvider } from "./auth/AuthProvider";
 import PrivateRoute from "./auth/PrivateRoute";
+import ConfirmEmail from './pages/ConfirmEmail';
 
 function AppContent() {
   const location = useLocation();
-  const hideLayout = ["/login", "/signup"].includes(location.pathname);
+  const hideLayout = ["/login", "/signup", "/confirm"].includes(location.pathname);
 
   return (
     <>
@@ -21,6 +22,7 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/confirm" element={<ConfirmEmail />} />
         <Route
           path="/dashboard"
           element={
