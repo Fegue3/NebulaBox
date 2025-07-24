@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Star } from "lucide-react";
 import "./Signup.css";
 import userPool from "./cognitoConfig"; 
+import { CognitoUserAttribute } from "amazon-cognito-identity-js";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -24,17 +27,18 @@ const Signup = () => {
     setMsg("");
 
     const attributes = [
-      { Name: "email", Value: email },
-      { Name: "given_name", Value: firstName },
-      { Name: "family_name", Value: lastName },
-    ];
+    new CognitoUserAttribute({ Name: "email", Value: email }),
+    new CognitoUserAttribute({ Name: "name", Value: firstName }),
+    new CognitoUserAttribute({ Name: "family_name", Value: lastName }),
+  ];
 
     userPool.signUp(email, password, attributes, null, (err, data) => {
       setIsLoading(false);
       if (err) {
         setMsg(err.message || "Signup failed.");
       } else {
-        setMsg("Signup successful! Check your email to confirm.");
+        setMsg("Signup successful! Redirecting...");
+        setTimeout(() => navigate("/confirm"), 1000);
       }
     });
   };
@@ -130,7 +134,7 @@ const Signup = () => {
               </div>
             )}
           </form>
-
+            
           <div className="signup-footer">
             <p className="footer-text">
               Already have an account?{" "}
