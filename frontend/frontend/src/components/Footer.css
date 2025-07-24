@@ -1,24 +1,86 @@
 .footer {
-  margin-top: 4rem;
-  padding: 2rem;
-  background-color: #111;
-  color: #ccc;
+  background: linear-gradient(to right, #0f172a, #1e293b);
+  color: #cbd5e1;
+  padding: 2rem 1rem; /* Aumentei o padding vertical e adicionei padding horizontal */
   text-align: center;
-}
-
-.footer-links {
-  margin-top: 0.5rem;
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
-
-.footer a {
-  color: #5db9ff;
-  text-decoration: none;
   font-size: 0.9rem;
 }
 
-.footer a:hover {
-  text-decoration: underline;
+.footer-columns {
+  display: flex;
+  justify-content: center;
+  gap: 2rem; /* Reduzi o gap entre colunas */
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.footer-columns > div {
+  flex: 1; /* Permite que as colunas cresçam */
+  min-width: 200px; /* Define uma largura mínima para as colunas */
+  margin: 0 1rem; /* Adiciona margem horizontal para espaçamento */
+}
+
+.footer-columns h4 {
+  color: #ffffff;
+  margin-bottom: 1rem; /* Aumentei a margem inferior */
+  font-size: 1.2rem; /* Aumentei o tamanho da fonte */
+}
+
+.footer-columns a {
+  display: block;
+  color: #94a3b8;
+  margin: 0.5rem 0; /* Ajustei a margem vertical */
+  text-decoration: none;
+  transition: color 0.2s ease-in-out; /* Transição mais suave */
+}
+
+.footer-columns a:hover {
+  color: #3b82f6; /* Azul mais vibrante */
+}
+
+.footer-bottom {
+  font-size: 0.85rem; /* Ajustei o tamanho da fonte */
+  color: #64748b;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Borda mais sutil */
+  padding-top: 1.5rem; /* Aumentei o padding superior */
+  margin-top: 2rem; /* Adicionei margem superior */
+}
+
+/* Media Query para responsividade mobile */
+@media (max-width: 768px) {
+  .footer-columns {
+    flex-direction: column; /* Empilha as colunas verticalmente */
+    align-items: center; /* Centraliza as colunas */
+    gap: 1.5rem;
+  }
+
+  .footer-columns > div {
+    text-align: center; /* Centraliza o texto nas colunas */
+    margin: 0; /* Remove margens horizontais em mobile */
+    width: 80%; /* Ajusta a largura para caber melhor */
+  }
+
+  .footer-columns h4 {
+    font-size: 1.1rem;
+  }
+
+  .footer-columns a {
+    margin: 0.4rem 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 1.5rem 0.5rem; /* Ajusta padding em telas muito pequenas */
+  }
+
+  .footer-columns > div {
+    width: 90%; /* Aumenta a largura em telas menores */
+  }
+
+  .footer-bottom {
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+  }
 }
