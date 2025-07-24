@@ -8,7 +8,7 @@ const footerLinks = {
     { name: "Docs", href: "/docs" },
   ],
   Resources: [
-    { name: "GitHub", href: "https://github.com", external: true },
+    { name: "GitHub", href: "https://github.com/Fegue3/NebulaBox", external: true },
     { name: "API Reference", href: "/api" },
     { name: "Tutorials", href: "/tutorials" },
     { name: "Status", href: "/status" },
