@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
+import Prices from "./pages/Prices";
 import { AuthProvider } from "./auth/AuthProvider";
 import PrivateRoute from "./auth/PrivateRoute";
 import ConfirmEmail from './pages/ConfirmEmail';
@@ -23,6 +24,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/confirm" element={<ConfirmEmail />} />
+        <Route path="/pricing" element={<Prices />} />
         <Route
           path="/dashboard"
           element={
