@@ -1,7 +1,11 @@
 import "./Home.css";
+import { useNavigate } from "react-router-dom";
+import Prices from "../pages/Prices";
 
 function Home() {
+  const navigate = useNavigate();
   return (
+    <>
     <div className="home">
       <div className="home-content">
         {/* 
@@ -20,7 +24,7 @@ function Home() {
         </p>
         
         <div className="buttons">
-          <button className="primary">Get Started</button>
+          <button className="primary" onClick={() => navigate('/signup')}>Get Started</button>
           <button className="secondary">Learn More</button>
         </div>
         
@@ -45,6 +49,8 @@ function Home() {
         </div>
       </div>
     </div>
+    <Prices /> 
+    </>
   );
 }
 
