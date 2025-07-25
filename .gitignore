@@ -9,3 +9,5 @@ crash.log
 node_modules/
 dist/
 .env
+
+.github/workflows/deploy.yml

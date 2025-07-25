@@ -1,0 +1,52 @@
+service: nebulabox-backend
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-north-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - dynamodb:PutItem
+            - dynamodb:Query
+          Resource: '*'
+
+functions:
+  uploadFile:
+    handler: uploadFile/index.handler
+    events:
+      - http:
+          path: upload
+          method: post
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            userPoolArn: arn:aws:cognito-idp:eu-north-1:351698237563:userpool/eu-north-1_qCHKa6FiW
+
+  listUserFiles:
+    handler: listUserFiles/index.handler
+    events:
+      - http:
+          path: files
+          method: get
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            userPoolArn: arn:aws:cognito-idp:eu-north-1:351698237563:userpool/eu-north-1_qCHKa6FiW
+
+  downloadFile:
+    handler: downloadFile/index.handler
+    events:
+      - http:
+          path: files/{fileId}/download
+          method: get
+          cors: true
+          authorizer:
+            type: COGNITO_USER_POOLS
+            userPoolArn: arn:aws:cognito-idp:eu-north-1:351698237563:userpool/eu-north-1_qCHKa6FiW
