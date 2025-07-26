@@ -1,3 +1,5 @@
+// This Lambda function sets the user's plan to 'free' in AWS Cognito
+// It updates the user's attributes in the Cognito User Pool
 const AWS = require('aws-sdk');
 const cognito = new AWS.CognitoIdentityServiceProvider();
 
