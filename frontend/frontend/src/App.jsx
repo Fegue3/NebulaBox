@@ -1,12 +1,14 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Login from "./auth/Login";
 import Signup from "./auth/Signup";
 import Prices from "./pages/Prices";
+import FilesDashboard from "./pages/FilesDashboard";
+import FilePreview from "./components/FilePreview";
+import EmptyFilesState from "./components/EmptyFilesState";
 import { AuthProvider } from "./auth/AuthProvider";
 import PrivateRoute from "./auth/PrivateRoute";
 import ConfirmEmail from './pages/ConfirmEmail';
@@ -29,7 +31,7 @@ function AppContent() {
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <FilesDashboard />
             </PrivateRoute>
           }
         />
