@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import EmptyFilesState from '../components/EmptyFilesState';
 import FilePreview from '../components/FilePreview';
+import UploadProgress from '../components/UploadProgress';
 import {
   getPresignedUploadUrl,
   uploadFileToS3,
@@ -13,12 +14,23 @@ import { useAuth } from '../auth/AuthProvider';
 
 const FilesDashboard = () => {
   const [files, setFiles] = useState([]);
+  const [uploads, setUploads] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
   const dragCounter = useRef(0);
   const { user } = useAuth();
   const accessToken = user?.accessToken;
   const userId = user?.sub;
+
+  const xhrRefs = useRef({});
+
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
 
   useEffect(() => {
     const fetchFiles = async () => {
@@ -41,9 +53,44 @@ const FilesDashboard = () => {
   }, [accessToken]);
 
   const uploadHandler = async (file) => {
+    const uploadId = crypto.randomUUID();
+    const controllerRef = { current: null };
+
+    const uploadEntry = {
+      id: uploadId,
+      name: file.name,
+      size: file.size,
+      sizeFormatted: formatFileSize(file.size),
+      type: file.type,
+      progress: 0,
+    };
+
+    setUploads((prev) => [...prev, uploadEntry]);
+    xhrRefs.current[uploadId] = controllerRef;
+
     try {
-      const { url, fileId } = await getPresignedUploadUrl(file, accessToken);
-      await uploadFileToS3(url, file);
+      const { url } = await getPresignedUploadUrl(file, accessToken);
+
+      await uploadFileToS3(
+        url,
+        file,
+        (e) => {
+          const percent = Math.round((e.loaded * 100) / e.total);
+          setUploads((prev) =>
+            prev.map((u) =>
+              u.id === uploadId ? { ...u, progress: percent } : u
+            )
+          );
+        },
+        controllerRef
+      );
+
+      setUploads((prev) =>
+        prev.map((u) =>
+          u.id === uploadId ? { ...u, progress: 100 } : u
+        )
+      );
+
       const updated = await listUserFiles(accessToken);
       setFiles(
         updated.map((f) => ({
@@ -55,6 +102,9 @@ const FilesDashboard = () => {
       );
     } catch (err) {
       console.error('Erro ao fazer upload:', err);
+      setUploads((prev) => prev.filter((u) => u.id !== uploadId));
+    } finally {
+      delete xhrRefs.current[uploadId];
     }
   };
 
@@ -114,14 +164,6 @@ const FilesDashboard = () => {
     }
   };
 
-  const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
   const openFileUpload = () => {
     fileInputRef.current?.click();
   };
@@ -143,6 +185,14 @@ const FilesDashboard = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const cancelUpload = (id) => {
+    const controller = xhrRefs.current[id]?.current;
+    if (controller) {
+      controller.abort();
+    }
+    setUploads((prev) => prev.filter((u) => u.id !== id));
   };
 
   useEffect(() => {
@@ -183,6 +233,12 @@ const FilesDashboard = () => {
         </button>
       </div>
 
+      <UploadProgress
+        uploads={uploads}
+        onCancel={cancelUpload}
+        onDismiss={() => setUploads([])}
+      />
+
       <div className={`files-container ${isDragging ? 'dragging' : ''}`}>
         {files.length === 0 ? (
           <EmptyFilesState onUploadClick={openFileUpload} />
@@ -191,7 +247,7 @@ const FilesDashboard = () => {
             {files.map((file) => (
               <FilePreview
                 key={file.id}
-                file={{ ...file, accessToken }} // 👈 acesso para preview da imagem
+                file={{ ...file, accessToken }}
                 onDelete={() => handleDeleteFile(file)}
                 onDownload={() => handleDownloadFile(file)}
                 formatFileSize={formatFileSize}
