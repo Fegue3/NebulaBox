@@ -14,9 +14,15 @@ export const AuthProvider = ({ children }) => {
     return new Promise((resolve, reject) => {
       userData.authenticateUser(authDetails, {
         onSuccess: (result) => {
-          const token = result.getIdToken().getJwtToken();
-          localStorage.setItem("nebula_token", token);
-          setUser(userData);
+          const idToken = result.getIdToken().getJwtToken();
+          const accessToken = result.getAccessToken().getJwtToken();
+          const refreshToken = result.getRefreshToken().getToken();
+          const sub = result.getIdToken().payload.sub;
+
+          const userInfo = { idToken, accessToken, refreshToken, sub };
+
+          localStorage.setItem("nebula_user", JSON.stringify(userInfo));
+          setUser(userInfo);
           resolve(result);
         },
         onFailure: (err) => reject(err),
@@ -25,15 +31,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    user?.signOut();
-    localStorage.removeItem("nebula_token");
+    const storedUser = JSON.parse(localStorage.getItem("nebula_user"));
+    if (storedUser?.signOut) storedUser.signOut();
+    localStorage.removeItem("nebula_user");
     setUser(null);
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("nebula_token");
-    if (token) {
-      setUser({ token }); // placeholder user if token exists
+    const stored = localStorage.getItem("nebula_user");
+    if (stored) {
+      try {
+        setUser(JSON.parse(stored));
+      } catch (e) {
+        console.error("Erro ao carregar token armazenado:", e);
+      }
     }
   }, []);
 
