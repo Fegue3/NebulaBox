@@ -4,13 +4,14 @@
   right: 20px;
   width: 320px;
   max-height: 400px;
-  background: #ffffff;
-  border: 1px solid #e1e5e9;
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #1e293b; /* Fundo escuro */
+  border: 1px solid #334155;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  font-family: 'Segoe UI', Roboto, sans-serif;
   z-index: 1000;
   overflow: hidden;
+  backdrop-filter: blur(6px);
 }
 
 .upload-progress-header {
@@ -18,8 +19,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 16px;
-  border-bottom: 1px solid #e1e5e9;
-  background: #f8f9fa;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
 }
 
 .upload-progress-title {
@@ -28,14 +29,14 @@
   gap: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #202124;
+  color: #f1f5f9;
 }
 
 .upload-spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid #e8eaed;
-  border-top: 2px solid #1a73e8;
+  border: 2px solid #334155;
+  border-top: 2px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -49,7 +50,7 @@
   background: none;
   border: none;
   font-size: 18px;
-  color: #5f6368;
+  color: #94a3b8;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -57,7 +58,7 @@
 }
 
 .upload-progress-close:hover {
-  background-color: #e8eaed;
+  background-color: rgba(148, 163, 184, 0.1);
 }
 
 .upload-progress-list {
@@ -70,11 +71,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #f1f3f4;
-}
-
-.upload-item:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid #1e293b;
 }
 
 .upload-file-info {
@@ -97,8 +94,7 @@
 
 .upload-file-name {
   font-size: 13px;
-  color: #202124;
-  font-weight: 400;
+  color: #e2e8f0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -107,7 +103,7 @@
 
 .upload-file-size {
   font-size: 12px;
-  color: #5f6368;
+  color: #94a3b8;
   margin-top: 2px;
 }
 
@@ -121,20 +117,20 @@
 .upload-progress-bar {
   width: 60px;
   height: 4px;
-  background-color: #e8eaed;
+  background-color: #334155;
   border-radius: 2px;
   overflow: hidden;
 }
 
 .upload-progress-fill {
   height: 100%;
-  background-color: #1a73e8;
+  background-color: #3b82f6;
   transition: width 0.3s ease;
 }
 
 .upload-progress-text {
   font-size: 12px;
-  color: #5f6368;
+  color: #94a3b8;
   font-weight: 500;
   min-width: 30px;
   text-align: right;
@@ -144,10 +140,10 @@
   background: none;
   border: none;
   font-size: 16px;
-  color: #5f6368;
+  color: #94a3b8;
   cursor: pointer;
   padding: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
   transition: background-color 0.2s;
   width: 20px;
   height: 20px;
@@ -157,7 +153,7 @@
 }
 
 .upload-cancel-btn:hover {
-  background-color: #e8eaed;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .upload-complete {
@@ -167,15 +163,32 @@
 }
 
 .upload-complete-icon {
-  color: #34a853;
+  color: #10b981;
   font-weight: bold;
   font-size: 14px;
 }
 
 .upload-complete-text {
   font-size: 12px;
-  color: #34a853;
+  color: #10b981;
   font-weight: 500;
+}
+
+.upload-expand-toggle {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-expand-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 /* Mobile responsiveness */
