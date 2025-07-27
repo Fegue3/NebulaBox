@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { isAuthenticated } from '../utils/auth';
+import { useAuth } from '../auth/AuthProvider';
 import "./Navbar.css";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { user, logout } = useAuth(); // pega diretamente do contexto
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
   const handleLogout = () => {
-    localStorage.removeItem("nebula_token");
+    logout();
     window.location.href = "/";
   };
 
@@ -20,7 +21,6 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <div className="navbar-content">
-          {/* Logo */}
           <Link to="/" className="navbar-logo">
             <svg className="navbar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.341 6.484A10 10 0 0 1 10.266 21.85" />
@@ -32,7 +32,6 @@ function Navbar() {
             <span className="navbar-brand">NebulaBox</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="navbar-desktop">
             <Link to="/" className="navbar-link">Home</Link>
             <Link to="/dashboard" className="navbar-link">Dashboard</Link>
@@ -40,9 +39,8 @@ function Navbar() {
             <Link to="/pricing" className="navbar-link">Pricing</Link>
           </div>
 
-          {/* Right Section */}
           <div className="navbar-right">
-            {!isAuthenticated() ? (
+            {!user ? (
               <>
                 <Link to="/login" className="navbar-login">Login</Link>
                 <Link to="/signup" className="navbar-signup">Sign Up</Link>
@@ -55,34 +53,31 @@ function Navbar() {
                 {dropdownOpen && (
                   <div className="dropdown-menu">
                     <Link to="/account" className="dropdown-item">Info</Link>
-                    <button onClick={handleLogout} className="dropdown-item logout">Logout
-                    </button>
+                    <button onClick={handleLogout} className="dropdown-item logout">Logout</button>
                   </div>
                 )}
               </div>
             )}
           </div>
 
-          {/* Mobile menu button */}
           <div className="navbar-mobile-button">
             <button onClick={toggleMenu} className="menu-button">
               {isOpen ? (
                 <svg className="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="m18 6-12 12"/>
-                  <path d="m6 6 12 12"/>
+                  <path d="m18 6-12 12" />
+                  <path d="m6 6 12 12" />
                 </svg>
               ) : (
                 <svg className="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="4" x2="20" y1="12" y2="12"/>
-                  <line x1="4" x2="20" y1="6" y2="6"/>
-                  <line x1="4" x2="20" y1="18" y2="18"/>
+                  <line x1="4" x2="20" y1="12" y2="12" />
+                  <line x1="4" x2="20" y1="6" y2="6" />
+                  <line x1="4" x2="20" y1="18" y2="18" />
                 </svg>
               )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <div className={`navbar-mobile ${isOpen ? 'open' : ''}`}>
           <div className="mobile-menu">
             <div className="mobile-links">
@@ -92,7 +87,7 @@ function Navbar() {
               <Link to="/pricing" onClick={() => setIsOpen(false)} className="mobile-link">Pricing</Link>
             </div>
             <div className="mobile-auth">
-              {!isAuthenticated() ? (
+              {!user ? (
                 <>
                   <Link to="/login" onClick={() => setIsOpen(false)} className="mobile-login">Login</Link>
                   <Link to="/signup" onClick={() => setIsOpen(false)} className="mobile-signup">Sign Up</Link>
