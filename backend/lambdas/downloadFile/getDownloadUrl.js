@@ -1,27 +1,40 @@
 const AWS = require('aws-sdk');
-
 const s3 = new AWS.S3();
+const dynamo = new AWS.DynamoDB.DocumentClient();
 
 const BUCKET_NAME = 'nebulabox-user-files';
+const TABLE_NAME = 'NebulaFiles';
 
 exports.handler = async (event) => {
-  const { userId, fileId, filename } = JSON.parse(event.body);
+  const { userId, fileId } = JSON.parse(event.body);
 
-  if (!userId || !fileId || !filename) {
+  if (!userId || !fileId) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ message: "Missing userId, fileId or filename" }),
+      body: JSON.stringify({ message: "Missing userId or fileId" }),
     };
   }
 
   try {
-    const s3Key = `${userId}/${fileId}-${filename}`;
+    const result = await dynamo.get({
+      TableName: TABLE_NAME,
+      Key: { userId, fileId }
+    }).promise();
+
+    const item = result.Item;
+    if (!item) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: "File not found" }),
+      };
+    }
 
     const url = s3.getSignedUrl('getObject', {
       Bucket: BUCKET_NAME,
-      Key: s3Key,
-      Expires: 60 * 5, // 5 minutos
-      ResponseContentDisposition: 'attachment'
+      Key: item.s3Key,
+      Expires: 300,
+      ResponseContentDisposition: `attachment; filename="${item.filename}"`,
+      ResponseContentType: item.mimeType
     });
 
     return {
