@@ -32,18 +32,27 @@ export async function getPresignedUploadUrl(file, token) {
 }
 
 // 3. Faz o PUT real para S3 com o presigned URL
-export async function uploadFileToS3(url, file) {
-  const res = await fetch(url, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': file.type
-    },
-    body: file
-  });
+export const uploadFileToS3 = (url, file, onProgress, controllerRef) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', url);
 
-  if (!res.ok) throw new Error('Erro ao fazer upload para o S3');
-  return true;
-}
+    if (onProgress) {
+      xhr.upload.onprogress = onProgress;
+    }
+
+    xhr.onload = () => {
+      xhr.status === 200 ? resolve() : reject(xhr.statusText);
+    };
+
+    xhr.onerror = reject;
+
+    if (controllerRef) controllerRef.current = xhr;
+
+    xhr.send(file);
+  });
+};
+
 
 // 4. Apagar ficheiro (do S3 e DynamoDB)
 export async function deleteUserFile({ fileId, filename, userId }, token) {
