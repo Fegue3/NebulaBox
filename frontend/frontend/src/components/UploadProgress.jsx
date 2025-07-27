@@ -40,7 +40,7 @@ const UploadProgress = ({ uploads, onCancel, onDismiss }) => {
         </button>
       </div>
 
-      {isExpanded && (
+      <div className={`upload-progress-wrapper ${isExpanded ? 'expanded' : 'collapsed'}`}>
         <div className="upload-progress-list">
           {uploads.map((upload) => (
             <div key={upload.id} className="upload-item">
@@ -85,7 +85,7 @@ const UploadProgress = ({ uploads, onCancel, onDismiss }) => {
             </div>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -191,6 +191,24 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
+.upload-progress-wrapper {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.upload-progress-wrapper.collapsed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.upload-progress-wrapper.expanded {
+  max-height: 1000px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .upload-progress-container {
