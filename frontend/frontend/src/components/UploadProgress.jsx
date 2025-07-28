@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import {
+  ChevronUp,
+  ChevronDown,
+  Image,
+  FileText,
+  Video,
+  Music,
+  Folder,
+  X,
+  CheckCircle,
+} from 'lucide-react';
 import './UploadProgress.css';
 
 const UploadProgress = ({ uploads, onCancel, onDismiss }) => {
@@ -25,10 +35,16 @@ const UploadProgress = ({ uploads, onCancel, onDismiss }) => {
           {hasActiveUploads ? (
             <>
               <div className="upload-spinner"></div>
-              <span>Uploading {activeUploads.length} file{activeUploads.length > 1 ? 's' : ''}...</span>
+              <span>
+                Uploading {activeUploads.length} file
+                {activeUploads.length > 1 ? 's' : ''}...
+              </span>
             </>
           ) : (
-            <span>{completedUploads.length} upload{completedUploads.length > 1 ? 's' : ''} completed</span>
+            <span>
+              {completedUploads.length} upload
+              {completedUploads.length > 1 ? 's' : ''} completed
+            </span>
           )}
         </div>
         <button
@@ -36,20 +52,31 @@ const UploadProgress = ({ uploads, onCancel, onDismiss }) => {
           onClick={onDismiss}
           aria-label="Close upload progress"
         >
-          ×
+          <X size={16} />
         </button>
       </div>
 
-      <div className={`upload-progress-wrapper ${isExpanded ? 'expanded' : 'collapsed'}`}>
+      <div
+        className={`upload-progress-wrapper ${
+          isExpanded ? 'expanded' : 'collapsed'
+        }`}
+      >
         <div className="upload-progress-list">
           {uploads.map((upload) => (
             <div key={upload.id} className="upload-item">
               <div className="upload-file-info">
                 <div className="upload-file-icon">
-                  {upload.type?.startsWith('image/') ? '🖼️' :
-                    upload.type?.includes('pdf') ? '📄' :
-                    upload.type?.startsWith('video/') ? '🎥' :
-                    upload.type?.startsWith('audio/') ? '🎵' : '📁'}
+                  {upload.type?.startsWith('image/') ? (
+                    <Image size={18} />
+                  ) : upload.type?.includes('pdf') ? (
+                    <FileText size={18} />
+                  ) : upload.type?.startsWith('video/') ? (
+                    <Video size={18} />
+                  ) : upload.type?.startsWith('audio/') ? (
+                    <Music size={18} />
+                  ) : (
+                    <Folder size={18} />
+                  )}
                 </div>
                 <div className="upload-file-details">
                   <div className="upload-file-name">{upload.name}</div>
@@ -66,18 +93,23 @@ const UploadProgress = ({ uploads, onCancel, onDismiss }) => {
                         style={{ width: `${upload.progress}%` }}
                       ></div>
                     </div>
-                    <span className="upload-progress-text">{upload.progress}%</span>
+                    <span className="upload-progress-text">
+                      {upload.progress}%
+                    </span>
                     <button
                       className="upload-cancel-btn"
                       onClick={() => onCancel(upload.id)}
                       aria-label="Cancel upload"
                     >
-                      ×
+                      <X size={16} />
                     </button>
                   </>
                 ) : (
                   <div className="upload-complete">
-                    <span className="upload-complete-icon">✓</span>
+                    <CheckCircle
+                      size={14}
+                      className="upload-complete-icon"
+                    />
                     <span className="upload-complete-text">Complete</span>
                   </div>
                 )}
